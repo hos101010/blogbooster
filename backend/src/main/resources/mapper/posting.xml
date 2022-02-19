@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.snl.blogbooster.mapper.PostingMapper">
+    <insert id="insertPosting" parameterType="com.snl.blogbooster.model.domain.Posting">
+        insert into posting
+        (
+        posting_num,
+        register_user_id,
+        url,
+        title,
+        image_count,
+        video_count,
+        word_count,
+        audit_at)
+        values (
+        #{postingNum},
+        #{registerUserId},
+        #{url},
+        #{title},
+        #{imageCount},
+        #{videoCount},
+        #{wordCount},
+        now()
+        ) on duplicate key
+        update
+              url = #{url},
+              title = #{title},
+              image_count = #{imageCount},
+              video_count =#{videoCount},
+              word_count =#{wordCount},
+              audit_at = now()
+    </insert>
+
+    <insert id="insertRequestHistory" parameterType="java.lang.String">
+        insert into request_history
+        (
+         url,
+         request_user_id,
+         audit_at
+        )
+        values(
+               #{param1},
+               #{param2},
+               now()
+              )on duplicate key
+        update
+            audit_at = now()
+    </insert>
+</mapper>

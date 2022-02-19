@@ -1,0 +1,36 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  profiles:
+    include: credential, local
+  datasource:
+    url: jdbc:mysql://localhost:3306/blogbooster?serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    level:
+      org.hibernate.SQL: DEBUG
+    com:
+      snl:
+        blogBooster: DEBUG
+    org:
+      springframework:
+        web:
+          servlet:
+            DispatcherServlet: DEBUG
+
+# MyBatis
+# mapper.xml 위치 지정
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+# model 프로퍼티 camel case 설정
+mybatis.configuration.map-underscore-to-camel-case: true
+

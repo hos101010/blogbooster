@@ -1,0 +1,84 @@
+<configuration>
+    <springProfile name="local">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="ACCESS_LOGGER" level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="ERROR_LOGGER" level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="HTTP_LOGGER" level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="!local">
+        <property name="LOG_PATH" value="/var/log/pearl"/>
+        <property name="LOG_FILE_NAME_ACCESS" value="/access"/>
+        <property name="LOG_FILE_NAME_HTTP" value="/http"/>
+        <property name="LOG_FILE_NAME_ERROR" value="/error"/>
+        <property name="LOG_CONSOLE_PATTERN" value="%-5level %d{yy-MM-dd HH:m:ss.SSS}[%logger{0}:%line] - %msg%n"/>
+        <property name="LOG_FILE_PATTERN" value="%msg%n"/>
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_CONSOLE_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="FILE_ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}${LOG_FILE_NAME_ACCESS}.log</file>
+
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_CONSOLE_PATTERN}</pattern>
+            </encoder>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}${LOG_FILE_NAME_ACCESS}.%d{yyyy-mm-dd}_%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>50MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>40</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}${LOG_FILE_NAME_ERROR}.error</file>
+
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_CONSOLE_PATTERN}</pattern>
+            </encoder>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}${LOG_FILE_NAME_ERROR}.%d{yyyy-mm-dd}_%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>50MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>40</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <logger name="ACCESS_LOGGER" level="INFO">
+            <appender-ref ref="FILE_ACCESS"/>
+        </logger>
+
+        <logger name="ERROR_LOGGER" level="INFO">
+            <appender-ref ref="FILE_ERROR"/>
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>

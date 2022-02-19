@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.snl.blogbooster.mapper.InfluenceMapper">
+    <insert id="insertInflKeyword" parameterType="com.snl.blogbooster.model.dto.InfluenceRequestDto">
+        insert into mukdukwho_keyword_history
+        (
+            keyword,
+            ranking,
+            publish_date
+        )
+        values(
+                  #{keyword},
+                  #{ranking},
+                  #{publishDate}
+              )on duplicate key
+        update
+            audit_at = now(),
+            ranking = #{ranking},
+            publish_date = #{publishDate}
+    </insert>
+
+</mapper>

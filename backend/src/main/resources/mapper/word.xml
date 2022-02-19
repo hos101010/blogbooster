@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.snl.blogbooster.mapper.WordMapper">
+    <insert id="insertWord" parameterType="com.snl.blogbooster.model.domain.Word">
+        insert into word
+        (
+         url,
+         register_user_id,
+         value ,
+         word_type,
+         repeat_count,
+         audit_at)
+        values (
+        #{url},
+        #{registerUserId},
+        #{value},
+        #{wordType},
+        #{repeatCount},
+        DATE_FORMAT(now(), '%Y%m%d')
+        )
+    </insert>
+
+    <delete id="deleteWordHistory" parameterType="java.lang.String">
+        delete from word
+        where 1=1
+        and url =#{param1}
+    </delete>
+
+    <insert id="insertInflKeyword" parameterType="com.snl.blogbooster.model.dto.InfluenceRequestDto">
+        insert into mukdukwho_keyword_history
+        (
+            keyword,
+            ranking,
+            publish_date
+        )
+        values(
+                  #{keyword},
+                  #{ranking},
+                  #{publishDate},
+              )on duplicate key
+        update
+            audit_at = now(),
+            ranking = #{ranking},
+            publish_date = #{publishDate},
+    </insert>
+</mapper>

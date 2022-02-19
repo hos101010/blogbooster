@@ -1,0 +1,18 @@
+package com.snl.blogbooster.controller;
+
+import com.snl.blogbooster.service.VideoService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
+
+@Validated
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class VideoController {
+
+    private final VideoService videoService;
+
+
+}

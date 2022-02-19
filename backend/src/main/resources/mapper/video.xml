@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.snl.blogbooster.mapper.VideoMapper">
+    <insert id="insertVideo" parameterType="com.snl.blogbooster.model.domain.Video" useGeneratedKeys="true" keyProperty="videoNum">
+        insert into video
+        (
+         posting_num,
+         title,
+         description,
+         audit_at)
+        values (
+        #{postingNum},
+        #{title},
+        #{description},
+        DATE_FORMAT(now(), '%Y%m%d')
+        )
+    </insert>
+
+    <update id="deleteVideo" parameterType="java.lang.Long">
+        update video
+        set is_deleted = true
+        where 1=1
+        and posting_num =#{param1}
+    </update>
+</mapper>

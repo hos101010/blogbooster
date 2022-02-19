@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.snl.blogbooster.mapper.UserMapper">
+    <insert id="insertUserHistory" parameterType="com.snl.blogbooster.model.dto.UserRankHistoryReqDto">
+        insert into user_rank_history
+        (
+            user_id,
+            standard_date,
+            category,
+            total_posting_count,
+            month_posting_count,
+            day_visitor,
+            total_visitor,
+            neighbor_count,
+            tag_count,
+            total_score
+            )
+        values (
+                   #{userId},
+                   #{standardDate},
+                   #{category},
+                   #{totalPostingCount},
+                   #{monthPostingCount},
+                   #{dayVisitor},
+                   #{totalVisitor},
+                   #{neighborCount},
+                   #{tagCount},
+                   #{totalScore}
+               )
+    </insert>
+
+    <select id="getUserTodayRank" parameterType="com.snl.blogbooster.model.dto.UserRequestDto" resultType="com.snl.blogbooster.model.domain.UserRankHistory">
+        select
+            standard_date
+           ,user_id
+           ,category
+           ,total_posting_count
+           ,month_posting_count
+           ,day_visitor
+           ,total_visitor
+           ,neighbor_count
+           ,tag_count
+           ,total_score
+           ,audit_id
+           ,audit_at
+           ,is_deleted
+           ,created_at
+        from user_rank_history
+        where 1=1
+        and standard_date =DATE_FORMAT(CURRENT_TIMESTAMP, '%Y%m%d')
+        and user_id =#{userId}
+    </select>
+
+</mapper>
