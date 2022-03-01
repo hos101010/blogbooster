@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.snl.blogbooster.mapper.PostingMapper">
-    <insert id="insertPosting" parameterType="com.snl.blogbooster.model.domain.Posting">
+    <insert id="insertPosting" parameterType="com.snl.blogbooster.model.domain.posting.Posting">
         insert into posting
         (
         posting_num,

@@ -1,6 +1,6 @@
 package com.snl.blogbooster.mapper;
 
-import com.snl.blogbooster.model.domain.Posting;
+import com.snl.blogbooster.model.domain.posting.Posting;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

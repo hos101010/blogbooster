@@ -1,7 +1,6 @@
 package com.snl.blogbooster.mapper;
 
-import com.snl.blogbooster.model.domain.UserRankHistory;
-import com.snl.blogbooster.model.dto.InfluenceRequestDto;
+import com.snl.blogbooster.model.domain.userScoreHistory.UserScoreHistory;
 import com.snl.blogbooster.model.dto.UserRequestDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -10,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
 
-    void insertUserHistory(UserRankHistory userRankHistory);
-    UserRankHistory getUserTodayRank(UserRequestDto userRequestDto);
+    void insertUserHistory(UserScoreHistory userRankHistory);
+    UserScoreHistory getUserTodayRank(UserRequestDto userRequestDto);
 }

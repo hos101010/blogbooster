@@ -12,13 +12,5 @@ import javax.validation.constraints.Min;
 @RequiredArgsConstructor
 @Validated
 public class PostingRequestDto {
-
-    private String postingNum;
-
-    @Column(length = 40)
-    private String registerUserId;
-
     private String url;
-
-    private String title;
 }

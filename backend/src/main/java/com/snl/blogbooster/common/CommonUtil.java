@@ -1,9 +1,9 @@
 package com.snl.blogbooster.common;
 
 import com.snl.blogbooster.model.domain.RankerPosting;
-import com.snl.blogbooster.model.domain.SearchResult;
-import com.snl.blogbooster.model.domain.UserRankHistory;
-import com.snl.blogbooster.model.dto.KeywordResponseDto;
+import com.snl.blogbooster.model.domain.user.User;
+import com.snl.blogbooster.model.domain.userScoreHistory.UserScoreHistory;
+import com.snl.blogbooster.model.dto.keyword.KeywordResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ import java.util.*;
 @Slf4j
 public class CommonUtil {
 
-    private final static String VIEW_SEARCH_URL ="https://search.naver.com/search.naver?where=view&sm=tab_jum&query=";
+    private final static String VIEW_SEARCH_URL ="https://m.search.naver.com/search.naver?where=view&sm=tab_jum&query=";
     private final static int IN_A_DAY = 0;
     private final static int IN_A_WEEK = -6;
     private final static int IN_A_MONTH = -29;
@@ -196,6 +196,54 @@ public class CommonUtil {
             return defaultValue;
         }
     }
+    /* 키워드 View탭 5등까지 조회*/
+    public static List<String> getKeywordViewRankers(String keyword)
+    {
+        List<String> rankers = new ArrayList<>();
+        String []fixedKeyword =keyword.split("\\s");
+        String viewKeyword = "";
+        for(int i=0; i<fixedKeyword.length; i++)//view tab에서는 키워드 사이의 공백을 "+"로 구분함
+        {
+            viewKeyword +=fixedKeyword[i];
+            if(i<fixedKeyword.length-1)
+            {
+                viewKeyword+="+";
+            }
+        }
+
+        if("".equals(viewKeyword))
+        {
+            viewKeyword=keyword;
+        }
+
+        String blogUrl =null;
+        int ranking =0;
+        try{
+            Document doc = Jsoup.connect(VIEW_SEARCH_URL+viewKeyword).get();
+            Elements viewTab = doc.select("div._svp_list ul.lst_total");
+            Elements viewRanker = viewTab.select("li");
+            for(Element element : viewRanker)
+            {
+                System.out.println(viewRanker.toString());
+                ranking = Integer.parseInt(element.select("li.bx._svp_item").attr("data-cr-rank"));
+                blogUrl = element.select("a.api_txt_lines.total_tit._cross_trigger").attr("href");
+                if(ranking < 6 && blogUrl.contains("blog.naver.com"))
+                {
+                    rankers.add(blogUrl);
+                }
+                if(ranking == 5)
+                    break;
+            }
+
+        }
+        catch(Exception e)
+        {
+            log.info("ViewSearchError keyword : {}, url:{} , ranking:{},  error: {}",keyword,blogUrl, ranking,e.getMessage() );
+        }
+
+        return rankers;
+    }
+
 
     /* 키워드 View탭 5등까지 조회*/
     public static List<RankerPosting> getKeywordViewRanker(String keyword)
@@ -203,7 +251,7 @@ public class CommonUtil {
         List<RankerPosting> rankers = new ArrayList<>();
         String []fixedKeyword =keyword.split("\\s");
         String viewKeyword = "";
-        for(int i=0; i<fixedKeyword.length; i++)//view tab에서는 키워드 사이의 공백을 "+"로 구분함
+         for(int i=0; i<fixedKeyword.length; i++)//view tab에서는 키워드 사이의 공백을 "+"로 구분함
         {
             viewKeyword +=fixedKeyword[i];
             if(i<fixedKeyword.length-1)
@@ -231,7 +279,7 @@ public class CommonUtil {
                     boolean isInfluence = (influence == "인플루언서"||influence.equals("인플루언서")) ? true : false;
                     String registerTime = element.select("span.sub_time.sub_txt").text();
                     String resisterUserName = element.select("a.sub_txt.sub_name").text();
-                    String title = element.select("a.api_txt_lines.total_tit._cross_trigger").text();
+                    String title = element.select( "a.api_txt_lines.total_tit._cross_trigger").text();
                     String registerUserId = blogUrl.split("blog.naver.com")[1].split("/")[1];
                     long postingNum = Long.parseLong(blogUrl.split("blog.naver.com")[1].split("/")[2]);
                     Elements tags = element.select("div.total_tag_area a span.txt");
@@ -266,7 +314,7 @@ public class CommonUtil {
         return rankers;
     }
 
-    public static KeywordResponseDto getWordInfo(String keyword)
+    public static KeywordResponseDto getKeyWordInfo(String keyword)
     {
         /* 하루,주간,월간 발행량 */
         int dayPublishCount = getPublicationCount(keyword,IN_A_DAY);
@@ -277,20 +325,17 @@ public class CommonUtil {
         int totalPublishCount = getBlogTotalPublishCount(keyword);
 
         /* 한달 검색 량*/
-        KeywordResponseDto keywordResponseDto = KeywordResponseDto.builder()
-                .dayPublishCount(dayPublishCount)
-                .keyword(keyword)
-                .monthPublishCount(monthPublishCount)
-                .totalPublishCount(totalPublishCount)
-                .weekPublishCount(weekPublishCount)
-                .searchResult(getMontlySearchMount(keyword))
-                .build();
+        KeywordResponseDto keywordResponseDto = getMontlySearchMount(keyword);
+        keywordResponseDto.setDayPublishCount(dayPublishCount);
+        keywordResponseDto.setMonthPublishCount(monthPublishCount);
+        keywordResponseDto.setTotalPublishCount(totalPublishCount);
+        keywordResponseDto.setWeekPublishCount(weekPublishCount);
 
         return keywordResponseDto;
     }
 
     /* 키워드 월 검색량 조회*/
-    public static SearchResult getMontlySearchMount(String keyword){
+    public static KeywordResponseDto getMontlySearchMount(String keyword){
         JSONObject result = null;
         try{
             keyword = keyword.replaceAll("\\s","");//공백을 붙여야함
@@ -322,14 +367,14 @@ public class CommonUtil {
         int totalSearchCount =pcSearchCount+mobileSearchCount;
 
 
-        SearchResult searchResult = SearchResult.builder()
+        KeywordResponseDto keywordSearchResponseDto = KeywordResponseDto.builder()
                 .pcSearchCount(pcSearchCount)
                 .mobileSearchCount(mobileSearchCount)
                 .totalSearchCount(totalSearchCount)
                 .complexIndex(result.getString("compIdx") == null ? "없음" : result.getString("compIdx"))
                 .build();
 
-        return searchResult;
+        return keywordSearchResponseDto;
     }
 
 
@@ -446,7 +491,12 @@ public class CommonUtil {
         return rankers;
     }
 
-    public static UserRankHistory getUserScore(String userId)
+
+    /*해당시점 유저 점수 측정하기
+      param : userId (ex. ckrzkssja123)
+    * result :  UserScoreHistory
+    * */
+    public static UserScoreHistory getUserScore(String userId)
     {
         ChromeDriver driver;
         System.setProperty("webdriver.chrome.driver", "C://Users//혀비스//Desktop//chromedriver_win32//chromedriver.exe");
@@ -476,21 +526,21 @@ public class CommonUtil {
         wait.until(ExpectedConditions.presenceOfElementLocated(new By.ByCssSelector("#root > div.apollo_layer_container > div > div > div > ul > li > a > div > em")));
         WebElement totalPublication = driver.findElement(new By.ByCssSelector("#root > div.apollo_layer_container > div > div > div > ul > li > a > div > em"));
         String totalCountText = totalPublication.getText();
-        int totalCount = Integer.parseInt(totalCountText.replaceAll(",",""));
+        long totalCount = Integer.parseInt(totalCountText.replaceAll(",",""));
         String [] array = visitorCountText.split("\\s");
-        int dayVisitor = Integer.parseInt(array[1].replaceAll(",",""));
-        int totalVisitor = Integer.parseInt(array[3].replaceAll(",",""));
-        int neighborCount =Integer.parseInt(neborCount.replaceAll("명의 이웃","").replaceAll(",",""));
+        long dayVisitor = Integer.parseInt(array[1].replaceAll(",",""));
+        long totalVisitor = Integer.parseInt(array[3].replaceAll(",",""));
+        long neighborCount =Integer.parseInt(neborCount.replaceAll("명의 이웃","").replaceAll(",",""));
 
-        UserRankHistory userRankHistory = UserRankHistory.builder()
+        UserScoreHistory userRankHistory = UserScoreHistory.builder()
                 .totalPostingCount(totalCount)
-                .category(blogThema)
                 .dayVisitor(dayVisitor)
                 .neighborCount(neighborCount)
                 .userId(userId)
                 .standardDate(CommonUtil.getyyyyMmddDate())
                 .totalVisitor(totalVisitor).build();
-        //목록형으로 이동
+
+        //총발행수가 0이라면 Score계산하지 않고 리턴
         if(totalCount < 1)
         {
             return userRankHistory;
@@ -505,7 +555,7 @@ public class CommonUtil {
             boolean stop =false;
             long new_height =-1;
             int beforeListSize =0;
-            int monthlyPostingCount =0;
+            long monthlyPostingCount =0;
             List<String> postingNumbers  = new ArrayList<>();
             while(true)
             {
@@ -605,12 +655,13 @@ public class CommonUtil {
             for(String keyword : blogTags)
             {
                 //view 탭 검색에 찔러보기
-                List<RankerPosting> rankerPostings = CommonUtil.getKeywordViewRanker(keyword);
-                for(RankerPosting rankerPosting : rankerPostings)
+                List<String> rankerUrls = CommonUtil.getKeywordViewRankers(keyword);
+                for(int i=0; i< rankerUrls.size(); i++)
                 {
-                    if(userId.equals(rankerPosting.getRegisterUserId()))//5명안에 든다면
+                    String url = rankerUrls.get(i);
+                    if(url.contains(userId))//5명안에 든다면
                     {
-                        double rankingValue= 5.0/rankerPosting.getRanking();
+                        double rankingValue= 5.0/(i+1);
                         int monthlySearchCount = CommonUtil.getMontlySearchMount(keyword).getTotalSearchCount();
                         double searchValue = monthlySearchCount/1000.0;
                         double score = Math.round(rankingValue*searchValue*100)/100.0;
@@ -618,11 +669,52 @@ public class CommonUtil {
                     }
                 }
             }
+            long tagCount =blogTags.size();
+            userRankHistory.setTagCount(tagCount);
             userRankHistory.setMonthPostingCount(monthlyPostingCount);
-            userRankHistory.setTagCount(blogTags.size());
             userRankHistory.setTotalScore(Math.round(totalScore*100)/100.0);
             return userRankHistory;
         }
+    }
+
+    public static int calcWordCount(Elements elements)
+    {
+        int wordCount =0;
+        Elements spans = elements.select("span");
+        for(Element e : spans)
+        {
+            String text = e.text();
+            wordCount += text.replaceAll("[^a-zA-Zㄱ-힣]", "").length();
+
+        }
+        return wordCount;
+    }
+
+    public static Elements getBlogMainContents(String url)
+    {
+        Elements blog_element = null;
+        try{
+            Document doc = Jsoup.connect(url).get();
+            // iframe 태그에 있는 진짜 블로그 주소 가져오기
+            Elements iframes = doc.select("iframe#mainFrame");
+            String src = iframes.attr("src");
+            //진짜 블로그 주소 document 가져오기
+            String url2 = "https://blog.naver.com" + src;
+            Document doc2 = Jsoup.connect(url2).get();
+            // 블로그에서 원하는 블로그 페이지 가져오기
+            String[] blog_logNo = src.split("&");
+            String[] logNo_split = blog_logNo[1].split("=");
+            String logNo = logNo_split[1];
+
+            // 찾고자 하는 블로그 본문 가져오기
+            String real_blog_addr = "div#post-view" + logNo;
+            blog_element = doc2.select(real_blog_addr);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return blog_element;
     }
 
 }

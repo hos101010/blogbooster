@@ -1,6 +1,6 @@
 package com.snl.blogbooster.model.dto;
 
-import com.snl.blogbooster.model.domain.SearchResult;
+import com.snl.blogbooster.model.domain.KeywordSearchResult;
 import lombok.*;
 
 @Setter
@@ -15,5 +15,5 @@ public class KeywordResponseDto {
     private int weekPublishCount;
     private int monthPublishCount;
     private int totalPublishCount;
-    private SearchResult searchResult;
+    private KeywordSearchResult searchResult;
 }

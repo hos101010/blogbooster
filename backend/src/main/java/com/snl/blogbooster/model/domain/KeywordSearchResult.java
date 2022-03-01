@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class SearchResult {
+public class KeywordSearchResult {
     private  int mobileSearchCount;
     private  int pcSearchCount;
     private  int totalSearchCount;

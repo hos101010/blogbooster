@@ -30,7 +30,7 @@
                )
     </insert>
 
-    <select id="getUserTodayRank" parameterType="com.snl.blogbooster.model.dto.UserRequestDto" resultType="com.snl.blogbooster.model.domain.UserRankHistory">
+    <select id="getUserTodayRank" parameterType="com.snl.blogbooster.model.dto.UserRequestDto" resultType="com.snl.blogbooster.model.domain.userScoreHistory.UserScoreHistory">
         select
             standard_date
            ,user_id

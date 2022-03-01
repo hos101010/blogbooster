@@ -1,6 +1,6 @@
 package com.snl.blogbooster.controller;
 
-import com.snl.blogbooster.model.domain.UserRankHistory;
+import com.snl.blogbooster.model.domain.userScoreHistory.UserScoreHistory;
 import com.snl.blogbooster.model.dto.UserRequestDto;
 import com.snl.blogbooster.model.dto.WordRequestDto;
 import com.snl.blogbooster.service.UserService;
@@ -23,13 +23,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(value= "/v1/data/userRankInfo", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserRankHistory userRankInfo(@RequestBody UserRequestDto userRequestDto)
+    public UserScoreHistory userRankInfo(@RequestBody UserRequestDto userRequestDto)
     {
        return userService.getUserRankInfo(userRequestDto);
     }
 
     @GetMapping(value= "/v1/data/keyword/userRankInfo", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<UserRankHistory> getKeywordRankerUsers(@RequestBody WordRequestDto wordRequestDto)
+    public List<UserScoreHistory> getKeywordRankerUsers(@RequestBody WordRequestDto wordRequestDto)
     {
         return userService.getKeywordRankerUsers(wordRequestDto);
     }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.snl.blogbooster.mapper.VideoMapper">
-    <insert id="insertVideo" parameterType="com.snl.blogbooster.model.domain.Video" useGeneratedKeys="true" keyProperty="videoNum">
+    <insert id="insertVideo" parameterType="com.snl.blogbooster.model.domain.video.Video" useGeneratedKeys="true" keyProperty="videoNum">
         insert into video
         (
          posting_num,

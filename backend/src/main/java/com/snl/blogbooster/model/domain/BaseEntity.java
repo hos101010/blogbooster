@@ -1,27 +1,24 @@
 package com.snl.blogbooster.model.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Setter
 @Getter
-@SuperBuilder
-@MappedSuperclass
-@NoArgsConstructor
-@AllArgsConstructor
+@MappedSuperclass/*상속한 경우에 BaseEntity필드를 컬럼으로 인식한다.*/
+@EntityListeners(AuditingEntityListener.class)/*Auditing기능을 포함시킨다.*/
 public abstract class BaseEntity {
 
-    @LastModifiedBy
-    private Timestamp auditAt;
-    private Timestamp createdAt;
+    @LastModifiedDate/*마지막으로 수정된 시간 자동저장*/
+    private LocalDateTime auditAt;
+
+    @CreatedDate/*생성된 시간을 자동저장*/
+    private LocalDateTime createdAt;
     private String auditId;
     private boolean isDeleted;
 

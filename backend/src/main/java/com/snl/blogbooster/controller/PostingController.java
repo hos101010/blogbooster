@@ -1,5 +1,6 @@
 package com.snl.blogbooster.controller;
 
+import com.snl.blogbooster.model.domain.posting.Posting;
 import com.snl.blogbooster.model.dto.PostingRequestDto;
 import com.snl.blogbooster.service.PostingService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 
-@Validated
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +18,16 @@ public class PostingController {
 
     private final PostingService postingService;
 
-    @PostMapping(value= "/v1/data/posting", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void insertPosting(@RequestBody PostingRequestDto postingRequestDto)
+    @GetMapping(value= "/v1/data/posting", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Posting getPostingInfo(@RequestBody PostingRequestDto postingRequestDto)
     {
-        String requestUserId ="ckrzkssja123";//다음에 Token값에서 가져오게 변경해야함
-        postingService.insertPosting(postingRequestDto.getUrl(),requestUserId);
+//        postingService.save(postingRequestDto.getUrl());
+        return postingService.findByUrl(postingRequestDto.getUrl());
+    }
+
+    @PostMapping(value= "/v1/data/posting", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Posting savePosting(@RequestBody PostingRequestDto postingRequestDto)
+    {
+        return postingService.save(postingRequestDto.getUrl());
     }
 }

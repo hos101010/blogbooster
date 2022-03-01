@@ -2,13 +2,7 @@ package com.snl.blogbooster.service;
 
 import com.snl.blogbooster.common.CommonUtil;
 import com.snl.blogbooster.mapper.WordMapper;
-import com.snl.blogbooster.model.domain.RankerPosting;
-import com.snl.blogbooster.model.domain.SearchResult;
-import com.snl.blogbooster.model.domain.UserRankHistory;
 import com.snl.blogbooster.model.domain.Word;
-import com.snl.blogbooster.model.dto.InfluenceRequestDto;
-import com.snl.blogbooster.model.dto.KeywordResponseDto;
-import com.snl.blogbooster.model.dto.UserRequestDto;
 import com.snl.blogbooster.model.dto.WordRequestDto;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
@@ -16,31 +10,10 @@ import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import kr.co.shineware.nlp.komoran.model.Token;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.security.Security;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -60,7 +33,7 @@ public class WordService {
     {
         String url = wordRequestDto.getUrl();
         String keyword = wordRequestDto.getKeyword();
-        Elements blogMainContents = postingService.getBlogMainContents(url);
+        Elements blogMainContents = CommonUtil.getBlogMainContents(url);
         Elements spans = blogMainContents.select("span");
         String komoranedText = "";
         for(Element e : spans)
