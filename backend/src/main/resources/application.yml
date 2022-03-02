@@ -19,6 +19,13 @@ spring:
       hibernate:
         format_sql:true
     show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true #true이면 flyway_schema_history테이블을 생성해줌
+    locations: classpath:/db/migration
+    baseline-version: 0 #baseline을 설정해놓으면 해당 숫자보다 큰 버전의sql만 수행함
+                        #ex) 4일경우 V5 부터 수행함.
+                        #migration sql은 resourse/db/migration/에 위치함
 
 logging:
   level:
@@ -42,4 +49,3 @@ mybatis:
 mybatis.configuration.map-underscore-to-camel-case: true
 
 
-# registeration
