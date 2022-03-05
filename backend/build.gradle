@@ -39,21 +39,18 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // querydsl
-    compile("com.querydsl:querydsl-core")
-    compile("com.querydsl:querydsl-jpa")
-    compile("org.mybatis:mybatis:3.5.2")
     annotationProcessor("com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
-    // Swagger 2
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
 
     // Utils
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    compile group: 'org.json', name: 'json', version: '20210307'
 
     /* 크롤링 */
     implementation 'org.jsoup:jsoup:1.14.3'
