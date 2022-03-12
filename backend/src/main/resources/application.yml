@@ -8,6 +8,9 @@ spring:
   profiles:
     include: credential, local
   datasource:
+    # docker
+    # url: jdbc:mysql://host.docker.internal:3306/blogbooster?serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+    # host
     url: jdbc:mysql://localhost:3306/blogbooster?serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
     username: root
     password: root
