@@ -2,13 +2,15 @@ version: "3"
 
 services:
   frontend:
-    container_name: frontend
+    container_name: blogbooster-frontend
     restart: always
     build: ./frontend
     ports:
-      - "8080:80"
+      - "80:80"
 
-  # backend:
-  #   container_name: backend
-  #   restart: always
-  #   build: ./backend
+  backend:
+    container_name: blogbooster-backend
+    restart: always
+    build: ./backend
+    ports:
+      - "8080:8080"
