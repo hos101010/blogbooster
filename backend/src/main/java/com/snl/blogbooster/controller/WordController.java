@@ -43,7 +43,7 @@ public class WordController {
 //    public KeywordResponseDto getWordInfo(@RequestBody WordRequestDto wordRequestDto)
 //    {
 //        return wordService.getWordInfo(wordRequestDto.getKeyword());
-//    }
+//    }`
 
 
 }

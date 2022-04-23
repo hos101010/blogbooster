@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -66,7 +66,7 @@ dependencies {
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.45'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
+//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.1'
 
     // https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java
     implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
@@ -88,6 +88,14 @@ dependencies {
 
     //flyway
     implementation 'org.flywaydb:flyway-core'
+
+    // feign : ErrorDecoder
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.3'
+    implementation 'io.github.openfeign:feign-httpclient:10.12'
+
+    /* google api*/
+    compile 'com.google.apis:google-api-services-blogger:v3-rev20210227-1.32.1'
+
 }
 
 tasks.named('test') {

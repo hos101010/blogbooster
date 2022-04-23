@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class PingController {
-    @GetMapping(value= "/ping")
+    @GetMapping(value= "/v1/ping")
     public String insertInfluenceKeyword()
     {
         return "server is alive!";
